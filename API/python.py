@@ -1,12 +1,20 @@
 import boto3
 
-# Initialize a session using the default region and AWS credentials
+# Initializing a session using the default region and AWS credentials
 session = boto3.Session()
 
-# Create a list of regions to query
+# Initialize the Boto3 clients for each service
+ec2_client = boto3.client('ec2')
+rds_client = boto3.client('rds')
+s3_client = boto3.client('s3')
+
+# Creating a list of regions
 regions = session.get_available_regions('ec2')
 
-# Iterate through each region and list the resources being used
+# Geting a list of all the AWS regions
+aws_regions = [region['RegionName'] for region in boto3.client('ec2').describe_regions()['Regions']]
+
+# Iterating through each region and listing the resources being used
 for region in regions:
     print(f"Resources in {region}:")
     ec2 = session.resource('ec2', region_name=region)
@@ -55,4 +63,4 @@ for region in regions:
     for bucket in buckets:
         print(f"\t\tBucket Name: {bucket['Name']}")
         print(f"\t\tBucket Creation Date: {bucket['CreationDate']}")
-        print()
+       
